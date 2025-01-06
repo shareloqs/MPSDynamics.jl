@@ -22,12 +22,14 @@ function run_2TDVP(dt, tmax, A, H, truncerr; obs=[], Dlim=50, savebonddims=false
     savebonddims && push!(data, "bonddims" => reshape([bonds...], length(bonds), 1))
 
     timed && (ttdvp = Vector{Float64}(undef, numsteps))
+    onthefly = copy(onthefly)
+    ontheflyplotbool = !isempty(onthefly) && !isnothing(onthefly[:plot_obs])
+    ontheflysavebool =  !isempty(onthefly) && !isempty(onthefly[:save_obs])
+    ontheflysavebool && (onthefly[:save_obs] = intersect(onthefly[:save_obs], [ob.name for ob in obs]))
 
     F=nothing
-    for tstep=1:numsteps
-        maxbond = max(bonds...)
-        @printf("%i/%i, t = %.3f, Dmax = %i ", tstep, numsteps, times[tstep], maxbond)
-        println()
+    iter = progressbar ? ProgressBar(numsteps; ETA=false) : 1:numsteps
+    for tstep in iter
         if timedep
            Ndrive = kwargs[:Ndrive]
            Htime = kwargs[:Htime]
@@ -52,6 +54,8 @@ function run_2TDVP(dt, tmax, A, H, truncerr; obs=[], Dlim=50, savebonddims=false
             A0, F = tdvp2sweep!(dt, A0, H0, F; truncerr=truncerr, truncdim=Dlim, kwargs...)
         end
         bonds = bonddims(A0)
+        maxbond = max(bonds...)
+        progressbar && (iter.Dmax = maxbond)
         exp = measure(A0, obs; t=times[tstep])
         for (i, ob) in enumerate(obs)
             data[ob.name] = cat(data[ob.name], exp[i], dims=ndims(exp[i])+1)
@@ -63,6 +67,8 @@ function run_2TDVP(dt, tmax, A, H, truncerr; obs=[], Dlim=50, savebonddims=false
         if savebonddims
             data["bonddims"] = cat(data["bonddims"], [bonds...], dims=2)
         end
+        ontheflyplotbool && tstep%onthefly[:step] == 0 && ontheflyplot(onthefly, tstep, times, data)
+        ontheflysavebool && tstep%onthefly[:step] == 0 && ontheflysave(onthefly, tstep, times, data)
     end
     timed && push!(data, "deltat"=>ttdvp)
     push!(data, "times" => times)

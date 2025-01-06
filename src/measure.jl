@@ -35,6 +35,17 @@ struct TwoSiteObservable <: Observable
     allsites::Bool
 end
 
+"""
+    RhoReduced(name,sites)
+
+Computes the reduced density matrix on the sites `sites` which can be either a single site or a tuple of two sites. Used to define
+reduced density matrices that are obs and convobs parameters for the `runsim` function.
+"""
+struct RhoReduced <: Observable
+    name::String
+    sites::Union{Int, Tuple{Int, Int}}
+end
+
 struct CdagCup <: Observable
     name::String
     sites::Tuple{Int,Int}
@@ -183,6 +194,7 @@ measure(A, O::TwoSiteObservable, ::Nothing) =
     measure2siteoperator(A, O.op1, O.op2, O.sites1, O.sites2)
 measure(A, O::TwoSiteObservable, ρ::Vector) =
     measure2siteoperator(A, O.op1, O.op2, O.sites1, O.sites2, ρ)
+measure(A, O::RhoReduced; kwargs...) = O.sites isa Int ? rhoreduced_1site(A, O.sites) : rhoreduced_2sites(A, O.sites)
 
 """
     measure1siteoperator(A::Vector, O, sites::Vector{Int})

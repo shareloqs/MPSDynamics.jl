@@ -28,6 +28,7 @@ include("run_DTDVP.jl")
 include("chainA1TDVP.jl")
 include("switchmpo.jl")
 include("finitetemperature.jl")
+include("utilities.jl")
 
 """
     runsim(dt, tmax, A, H; 
