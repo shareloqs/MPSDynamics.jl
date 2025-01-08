@@ -44,5 +44,5 @@ Pages = ["MPSDynamics.jl", "chain2TDVP.jl", "chainA1TDVP.jl","chainDMRG.jl","cha
 ## Advanced
 ```@autodocs
 Modules = [MPSDynamics]
-Pages = ["flattendict.jl", "logging.jl", "logiter.jl","machines.jl"]
+Pages = ["flattendict.jl", "logging.jl", "logiter.jl","machines.jl","utilities.jl"]
 ```

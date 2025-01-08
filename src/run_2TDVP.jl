@@ -1,4 +1,4 @@
-function run_2TDVP(dt, tmax, A, H, truncerr; obs=[], Dlim=50, savebonddims=false, timed=false, reduceddensity=false, timedep=false, kwargs...)
+function run_2TDVP(dt, tmax, A, H, truncerr; obs=[], Dlim=50, savebonddims=false, timed=false, reduceddensity=false, timedep=false, progressbar=true, onthefly=Dict(), kwargs...)
     A0=deepcopy(A)
     H0=deepcopy(H)
     data = Dict{String,Any}()
