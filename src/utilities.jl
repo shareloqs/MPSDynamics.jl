@@ -31,8 +31,8 @@ function Base.iterate(bar::ProgressBar, state=1)
         elapsedstr = Dates.format(Time(0)+Second(floor(Int, dtelapsed)), dtelapsed>3600 ? "HH:MM:SS" : "MM:SS")
         ETAstr = Dates.format(Time(0)+Second(floor(Int, dtETA*(bar.numsteps - state)/min(state-1, Ntimes))), dtETA>3600 ? "HH:MM:SS" : "MM:SS")
         iterstr = Dates.format(Time(0)+Millisecond(floor(Int, 1000*dtiter)), dtiter>60 ? "MM:SS.sss" : "SS.sss")
-
-        printstyled("\r$(round(100*state/bar.numsteps, digits=1))% "; color = :green, bold=true)
+        print("\r")
+        printstyled("$(round(100*state/bar.numsteps, digits=1))% "; color = :green, bold=true)
         print("┣"*"#"^(round(Int, state/bar.numsteps*bar.length))*" "^(bar.length-round(Int, state/bar.numsteps*bar.length))*"┫")
         printstyled(" $state/$(bar.numsteps) [$(elapsedstr)s"*(bar.ETA ? "; ETA:$(ETAstr)s" : "")*"; $(iterstr)s/it"*(bar.Dmax > 0 ? "; Dmax=$(bar.Dmax)" : "")*"]"; color = :green, bold=true)
     end
