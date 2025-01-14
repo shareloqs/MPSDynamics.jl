@@ -57,6 +57,11 @@ The time step used in simulations must be small enough to accurately capture the
 ### Hard cut-off in the spectral density function
 The cutoff frequency $\omega_c$ in the spectral density function has to be selected in order to incorporate all of the relevant frequencies. It is to be noted that, for spectral densities belonging to the Szegö class[^chin_exact_2010], the cutoff frenquency $\omega_c$ also determines the asymptotic values to which the chain coefficients converge [^woods_mappings_2014]. Therefore, if we want to reach translational invariance (converged values) in the chain coefficients, then we need to specify a cutoff. To avoid boundary effects, it is a good choice to select cutoff frequency such that the frequency range covers well the different frequencies of the system.
 
+### Memory limit for cluster users
+When using MPSDynamics in clusters, the julia option "heap-size-hint"  has to be added when starting julia to keep the available memory limited. Otherwise, julia takes too much memory in the node and simulation crashes. A typical command line would be :
+```
+julia --heap-size-hint=1G $Path_script/script.jl 
+```
 
 ## References
 [^woods_simulating_2015]: Woods, M. P.; Cramer, M.; Plenio, M. B. Simulating Bosonic Baths with Error Bars. Phys. Rev. Lett. 2015, 115 (13), 130401. https://doi.org/10.1103/PhysRevLett.115.130401.

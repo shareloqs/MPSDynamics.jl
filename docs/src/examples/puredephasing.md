@@ -178,6 +178,8 @@ plot(time_analytical, t->Decoherence_ohmic(t), label="Analytics", title=L"Pure D
 
 plot!(dat["data/times"], ρ12, lw=4, ls=:dash, label="Numerics")
 ```
+![image](puredephasing_rho12.png)
+
 
 ## Bibliography
 

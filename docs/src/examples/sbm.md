@@ -149,3 +149,7 @@ method == :DTDVP && heatmap(dat["data/times"], collect(0:N+1), dat["data/bonddim
 
 heatmap(dat["data/times"], collect(1:N), abs.(dat["data/SXdisp"][1,:,:]), xlabel=L"t",ylabel="chain mode")
 ```
+
+![image](sbm_sz.png)
+
+![image](sbm_heatmap.png)

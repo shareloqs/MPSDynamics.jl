@@ -22,7 +22,7 @@ N = 60 # length of the chain
 
 Δ = 0.0 # tunneling 
 
-ω0 = 0.8 # TLS gap
+ω0 = 0.6 # TLS gap
 
 s = 1 # ohmicity
 
@@ -140,4 +140,4 @@ bath_occup = mapslices(X -> MPSDynamics.measuremodes(X, cpars[1], cpars[2]), dat
 omeg = MPSDynamics.eigenchain(cpars, nummodes=N).values
 
 plot(omeg, bath_occup[:, :, end], lw=4, xlabel=L"\omega", ylabel=L"\langle n^b_\omega \rangle",
-title="Mode occupation in the extended bath at final time")
+title="Mode occupation in the extended bath at final time",legend=:none)
