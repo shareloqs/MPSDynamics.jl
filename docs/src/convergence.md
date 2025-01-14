@@ -63,6 +63,8 @@ When using MPSDynamics in clusters, the julia option "heap-size-hint"  has to be
 julia --heap-size-hint=1G $Path_script/script.jl 
 ```
 
+When launching a job, for instance with `sbatch`, it can be useful to specify `--hint=nomultithread`, as multithreading is not currently supported by MPSDynamics.
+
 ## References
 [^woods_simulating_2015]: Woods, M. P.; Cramer, M.; Plenio, M. B. Simulating Bosonic Baths with Error Bars. Phys. Rev. Lett. 2015, 115 (13), 130401. https://doi.org/10.1103/PhysRevLett.115.130401.
 [^DeVega_howto_2015]: De Vega, I.; Schollwöck, U.; Wolf, F. A. How to Discretize a Quantum Bath for Real-Time Evolution. Phys. Rev. B 2015, 92 (15), 155126. https://doi.org/10.1103/PhysRevB.92.155126.
