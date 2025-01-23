@@ -25,11 +25,11 @@ function Base.iterate(bar::ProgressBar, state=1)
     else
         tnow = time()
         dtelapsed = tnow - bar.times[1]
-        dtETA = tnow - bar.times[2+state%Ntimes]
+        dtETA = (tnow - bar.times[2+state%Ntimes])*(bar.numsteps - state)/min(state-1, Ntimes)
         dtiter = tnow - bar.times[2+(state-1)%Ntimes]
         bar.times[2+state%Ntimes] = tnow
         elapsedstr = Dates.format(Time(0)+Second(floor(Int, dtelapsed)), dtelapsed>3600 ? "HH:MM:SS" : "MM:SS")
-        ETAstr = Dates.format(Time(0)+Second(floor(Int, dtETA*(bar.numsteps - state)/min(state-1, Ntimes))), dtETA>3600 ? "HH:MM:SS" : "MM:SS")
+        ETAstr = Dates.format(Time(0)+Second(floor(Int, dtETA)), dtETA>3600 ? "HH:MM:SS" : "MM:SS")
         iterstr = Dates.format(Time(0)+Millisecond(floor(Int, 1000*dtiter)), dtiter>60 ? "MM:SS.sss" : "SS.sss")
         print("\r")
         printstyled("$(round(100*state/bar.numsteps, digits=1))% "; color = :green, bold=true)
