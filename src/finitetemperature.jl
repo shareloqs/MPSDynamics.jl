@@ -38,7 +38,7 @@ function chaincoeffs_finiteT(nummodes, β, ohmic=true; α=1, s=1, J=nothing, ωc
         else
             throw(ArgumentError("An interval AB with mc = $mc components should have been provided."))
         end
-    elseif length(AB) != 2*mc
+    elseif size(AB)[1] != mc
         throw(ArgumentError("AB has a different number of intervals than mc = $mc."))             
     end
 
@@ -118,7 +118,7 @@ function chaincoeffs_finiteT(nummodes, β, ohmic=true; α=1, s=1, J=nothing, ωc
 end
 
 """
- chaincoeffs_fermionic(nummodes, β, chain; ϵ=nothing, J=nothing, ωc=1, mc=4, mp=0, AB=nothing, iq=1, idelta=2, procedure=:Lanczos, Mmax=5000, save=true)
+    chaincoeffs_fermionic(nummodes, β, chain; ϵ=x, ωc=1, mc=4, mp=0, AB=nothing, iq=1, idelta=2, procedure=:Lanczos, Mmax=5000, save=true)
 
 Generate chain coefficients ``[[ϵ_0,ϵ_1,...],[t_0,t_1,...],c_0]`` for a fermionic bath at the inverse temperature β.
 
@@ -148,7 +148,7 @@ function chaincoeffs_fermionic(nummodes, β, chain; ϵ=nothing, J=nothing, ωc=1
         else
             throw(ArgumentError("An interval AB with mc = $mc components should have been provided."))
         end
-    elseif length(AB) != 2*    mc
+    elseif size(AB)[1] != mc
         throw(ArgumentError("AB has a different number of intervals than mc = $mc."))             
     end
 
@@ -208,3 +208,89 @@ function chaincoeffs_fermionic(nummodes, β, chain; ϵ=nothing, J=nothing, ωc=1
 
     return [jacerg[:,1], jacerg[1:N-1,2],jacerg[N,2]]
 end
+
+
+"""
+    chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:Lanczos, Mmax=5000, save=true)
+
+Generate chain coefficients ``[[ϵ_0,ϵ_1,...],[t_0,t_1,...],c_0]`` for a discrete harmonic bath at the inverse temperature β.
+
+# Arguments
+* β: inverse temperature. For 0 Kelvin, put Inf as β
+* ωdiscrete: discrete frequency corresponding to the Jωdiscrete values
+* Jωdiscrete: amplitude of the spectral density at the corresponding ωdiscrete
+* procedure: choice between the Stieltjes and the Lanczos procedure
+* Mmax: maximum number of integration points
+* save: if true the coefficients are saved
+"""
+function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:Lanczos, Mmax=5000, save=true)
+
+    ω = ωdiscrete
+    Jω = Jωdiscrete
+    length(ω)== length(Jω) || throw(ErrorException("J(ω) has $(length(Jω)) values while there is $(length(ω)) frequecencies"))
+    N=length(ω) #Number of bath modes
+    if β != Inf
+       ω_pos = ω
+       Jω_pos = Jω .* (coth.((β/2).*ω_pos[:]) .+ 1) ./2
+
+       ω_neg = -ω
+       Jω_neg = -Jω .* (coth.((β/2).*ω_neg[:]) .+ 1) ./2
+
+       ω = vcat(ω_neg,ω_pos)
+       Jω =  vcat(Jω_neg,Jω_pos)
+    end
+    mp=length(ω) # the number of points in the discrete part of the measure
+
+    DM =Array{Float64}(undef,mp,2)
+    for i=1:mp
+       DM[i,1] = ω[i]
+       DM[i,2] = Jω[i]
+    end
+
+    eps0=1e7*eps(Float64)
+
+    jacerg = zeros(N,2)
+
+    ab = Array{Float64}(undef, N, 2)
+    ab[:,2] = zeros(N,1) 
+
+    if procedure==:Lanczos  # choice between the Stieltjes and the Lanczos procedure
+        ab = lanczos(N,DM)
+    elseif procedure==:Stieltjes
+        ab = stieltjes(N,DM)
+    else
+        throw(ArgumentError("Procedure should be either Lanczos or Stieltjes."))
+    end
+
+    for m = 1:N-1
+       jacerg[m,1] = ab[m,1] #site energy
+       jacerg[m,2] = sqrt(ab[m+1,2]) #hopping parameter
+    end
+    jacerg[N,1] = ab[N,1]
+
+    eta = sum(Jω)
+
+    jacerg[N,2] = sqrt(eta) #coupling coeficient
+
+    if save==true
+        # Write a HDF5 file
+        #curdir = @__DIR__
+        dir = @__DIR__
+        curdir = abspath(joinpath(dir, "../ChainOhmT"))
+
+        Nstr = string(N)
+        bstr = string(β)
+        # the "path" to the data inside of the h5 file is N -> ωc -> beta -> data (e, t or c)
+         
+        # Write onsite energies
+        h5write("$curdir/discreteT/chaincoeffs.h5", string("/", Nstr, "/", bstr, "/e"), jacerg[1:N,1])
+        # Write opping energies
+        h5write("$curdir/discreteT/chaincoeffs.h5", string("/", Nstr, "/", bstr,"/t"), jacerg[1:N-1,2])
+        # Write coupling coefficient
+        h5write("$curdir/discreteT/chaincoeffs.h5", string("/", Nstr, "/", bstr,"/c"), jacerg[N,2])
+ 
+    end
+
+    return [jacerg[:,1], jacerg[1:N-1,2],jacerg[N,2]]
+end
+
