@@ -228,7 +228,6 @@ function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:La
     ω = ωdiscrete
     Jω = Jωdiscrete
     length(ω)== length(Jω) || throw(ErrorException("J(ω) has $(length(Jω)) values while there is $(length(ω)) frequecencies"))
-    N=length(ω) #Number of bath modes
     if β != Inf
        ω_pos = ω
        Jω_pos = Jω .* (coth.((β/2).*ω_pos[:]) .+ 1) ./2
@@ -239,6 +238,8 @@ function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:La
        ω = vcat(ω_neg,ω_pos)
        Jω =  vcat(Jω_neg,Jω_pos)
     end
+
+    N=length(ω) #Number of bath modes
     mp=length(ω) # the number of points in the discrete part of the measure
 
     DM =Array{Float64}(undef,mp,2)
