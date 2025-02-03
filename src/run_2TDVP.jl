@@ -30,6 +30,11 @@ function run_2TDVP(dt, tmax, A, H, truncerr; obs=[], Dlim=50, savebonddims=false
     F=nothing
     iter = progressbar ? ProgressBar(numsteps; ETA=false) : 1:numsteps
     for tstep in iter
+        if !progressbar
+            maxbond = max(bonds...)
+            @printf("%i/%i, t = %.3f, Dmax = %i ", tstep, numsteps, times[tstep], maxbond)
+            println()
+        end
         if timedep
            Ndrive = kwargs[:Ndrive]
            Htime = kwargs[:Htime]
@@ -54,7 +59,7 @@ function run_2TDVP(dt, tmax, A, H, truncerr; obs=[], Dlim=50, savebonddims=false
             A0, F = tdvp2sweep!(dt, A0, H0, F; truncerr=truncerr, truncdim=Dlim, kwargs...)
         end
         bonds = bonddims(A0)
-        maxbond = max(bonds...)
+        progressbar && (maxbond = max(bonds...))
         progressbar && (iter.Dmax = maxbond)
         exp = measure(A0, obs; t=times[tstep])
         for (i, ob) in enumerate(obs)

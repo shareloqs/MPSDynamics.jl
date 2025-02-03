@@ -34,6 +34,10 @@ function run_DTDVP(dt, tmax, A, H, prec; obs=[], effects=false, error=false, tim
     Afull=nothing
     iter = progressbar ? ProgressBar(numsteps; ETA=false) : 1:numsteps
     for tstep in iter
+        if !progressbar
+            maxbond = max(bonds...)
+            @printf("%i/%i, t = %.3f, Dmax = %i \n", tstep, numsteps, times[tstep], maxbond)
+        end
         if timedep
            Ndrive = kwargs[:Ndrive]
            Htime = kwargs[:Htime]
@@ -61,7 +65,7 @@ function run_DTDVP(dt, tmax, A, H, prec; obs=[], effects=false, error=false, tim
         
         exp = info["obs"]
         bonds = info["dims"]
-        maxbond = max(bonds...)
+        progressbar && (maxbond = max(bonds...))
         progressbar && (iter.Dmax = maxbond)
 
         effects && (efft[tstep] = reduce(hcat, info["effect"]))

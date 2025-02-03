@@ -28,6 +28,10 @@ function run_1TDVP(dt, tmax, A, H, Dmax; obs=[], timed=false, reduceddensity=fal
     mpsembed!(A0, Dmax)
     iter = progressbar ? ProgressBar(numsteps; ETA=true) : 1:numsteps
     for tstep in iter
+        if !progressbar
+            @printf("%i/%i, t = %.3f ", tstep, numsteps, times[tstep])
+            println()
+        end
         if timedep
 	   Ndrive = kwargs[:Ndrive]
 	   Htime = kwargs[:Htime]
