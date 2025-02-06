@@ -26,10 +26,10 @@ The elementary tensor operations are implemented in all cases using the [TensorO
 
 # Installation
 
-The package may be installed by typing the following into a Julia REPL
+The package may be installed by typing `]` in a Julia REPL to enter the package manager, and then run the command
 
 ```julia
-] add https://github.com/shareloqs/MPSDynamics.git
+pkg> add MPSDynamics
 ```
 
 # Usage
