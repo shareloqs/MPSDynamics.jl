@@ -178,7 +178,7 @@ export MPOtoVector
 
 export rhoreduced_2sites, rhoreduced_1site, protontransfermpo
 
-export chaincoeffs_finiteT, chaincoeffs_fermionic, fermionicspectraldensity_finiteT
+export chaincoeffs_finiteT, chaincoeffs_fermionic, fermionicspectraldensity_finiteT, chaincoeffs_finiteT_discrete
 
 export onthefly, mergetmp
 
