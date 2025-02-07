@@ -40,7 +40,7 @@ function Base.iterate(bar::ProgressBar, state=1)
 end
 
 """
-    onthefly(;plot_obs=nothing::Union{<:Observable, Nothing}, save_obs=Vector{Observable}(undef, 0)::Union{<:Observable, Vector{<:Observable}}, savedir=string(homedir(),"/MPSDynamics/tmp/"), step=10::Int, func=identity<:Function, compare=nothing::Union{Tuple{Vector{Float64}, Vector{Float64}}, Nothing}, clear=identity<:Function)
+    onthefly(;plot_obs=nothing::Union{<:Observable, Nothing}, save_obs=Vector{Observable}(undef, 0)::Union{<:Observable, Vector{<:Observable}}, savedir="auto", step=10::Int, func=identity<:Function, compare=nothing::Union{Tuple{Vector{Float64}, Vector{Float64}}, Nothing}, clear=identity<:Function)
 
 Helper function returning a dictionnary containing the necessary arguments for on the fly plotting or saving in the `runsim` function.
 
@@ -48,7 +48,7 @@ Helper function returning a dictionnary containing the necessary arguments for o
 
 * `plot_obs` : Observable to plot
 * `save_obs` : Observable(s) to save
-* `savedir` : Used to specify the path where temporary files are stored
+* `savedir` : Used to specify the path where temporary files are stored, default is `"auto"` which saves in a "tmp" folder in the run folder (generally located at "~/MPSDynamics/<unid>/tmp/"). 
 * `step` : Number of time steps every which the function plots or saves the data
 * `func` : Function to apply to the result of measurement of plot_obs (for example `real` or `abs` to make a complex result possible to plot)
 * `compare` : Tuple `(times, data)` of previous results to compare against the plot_obs results,
@@ -57,17 +57,17 @@ Helper function returning a dictionnary containing the necessary arguments for o
 # Examples
 
 For example in the [Spin-Boson model example](@ref "The Spin Boson Model"), adding the following argument to the `runsim` function allows to save
-the "sz" observable `ob1` in the directory "~/MPSDynamics/tmp/" and plot its real part during the simulation:
+the "sz" observable `ob1` in the directory "~/MPSDynamics/<unid>/tmp/" and plot its real part during the simulation:
 ```julia
-runsim(..., onthefly=onthefly(plot_obs=ob1, save_obs=[ob1], savedir="~/MPSDynamics/tmp/", step=10, func=real))
+runsim(..., onthefly=onthefly(plot_obs=ob1, save_obs=[ob1], savedir="auto", step=10, func=real))
 ```
 To merge the temporary files in one usable file, one can then use [`MPSDynamics.mergetmp`](@ref).
 """
-function onthefly(;plot_obs=nothing::Union{<:Observable, Nothing}, save_obs=Vector{Observable}(undef, 0)::Union{<:Observable, Vector{<:Observable}}, savedir=string(homedir(),"/MPSDynamics/tmp/"), step=10::Int, func=identity<:Function, compare=nothing::Union{Tuple{Vector{Float64}, Vector{Float64}}, Nothing}, clear=nothing)
+function onthefly(;plot_obs=nothing::Union{<:Observable, Nothing}, save_obs=Vector{Observable}(undef, 0)::Union{<:Observable, Vector{<:Observable}}, savedir="auto", step=10::Int, func=identity<:Function, compare=nothing::Union{Tuple{Vector{Float64}, Vector{Float64}}, Nothing}, clear=nothing)
     if isnothing(plot_obs) && isempty(save_obs)
         error("Must provide an observable to plot/save")
     end
-    !isempty(save_obs) && (isdir(savedir) || mkdir(savedir))
+    # !isempty(save_obs) && (isdir(savedir) || mkdir(savedir))
     plt = isnothing(plot_obs) ? nothing : plot(title="Intermediate Results", xlabel="t", ylabel=plot_obs.name)
     !isnothing(compare) && plot!(compare)
     println("On the fly mode activated")
@@ -101,15 +101,16 @@ function ontheflysave(onthefly, tstep, times, data)
 end
 
 """
-    mergetmp(;tmpdir=string(homedir(),"/MPSDynamics/tmp/"), fields=[], overwrite=true)
+    mergetmp(tmpdir; fields=[], overwrite=true)
 
 Merges the temporary files created by the `ontheflysave` function at the directory `tmpdir` and returns a dictionnary containing the resulting data.
 By default all fields are present but one can select the fields of interest with a list of names in `fields`."""
-function mergetmp(;tmpdir=string(homedir(),"/MPSDynamics/tmp/"), fields=[], overwrite=true)
+function mergetmp(tmpdir; fields=[], overwrite=true)
     tmpdir[end] != '/' && (tmpdir *= '/')
     !isdir(tmpdir) && error("Choose a valid directory")
-
-    files = sort([walkdir(tmpdir)...][1][3], by=(x->parse(Int, match(r"(\d+)", x).captures[1])))
+    files = [walkdir(tmpdir)...][1][3]
+    files = filter(x->!isnothing(match(r"tmp(\d+).jld", x)), files)
+    files = sort(files, by=(x -> parse(Int, match(r"(\d+)", x).captures[1])))
     isempty(fields) && (fields = keys(JLD.load(tmpdir*files[1])))
     merged_data = Dict(ob => [] for ob in fields)
     i = 1
