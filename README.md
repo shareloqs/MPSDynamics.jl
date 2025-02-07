@@ -151,7 +151,7 @@ Import["~/MPSDynamics/XXXXX/dat_XXXXX.jld",{"HDF5","Datasets","/data/sz"}]
 ```
 
 # Documentation
-  [https://shareloqs.github.io/MPSDynamics/](https://shareloqs.github.io/MPSDynamics/)
+  [https://shareloqs.github.io/MPSDynamics.jl/](https://shareloqs.github.io/MPSDynamics.jl/)
 
 # Publications
 Publications which make use of MPSDynamics:
