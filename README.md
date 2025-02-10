@@ -5,7 +5,7 @@
 
 
 
-[![J. Chem. Phys.](https://img.shields.io/badge/J.%20Chem.%20Phys.%20-%2010.1063%2F5.0223107%20-%20navy)](https://doi.org/10.1063/5.0223107) [![ArXiv](https://img.shields.io/badge/arXiv-2406.07052-B31B1B.svg)](https://arxiv.org/abs/2406.07052) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11400776.svg)](https://doi.org/10.5281/zenodo.11400776) [![license](https://img.shields.io/badge/License-GPL_3.0-orange.svg)](https://github.com/shareloqs/MPSDynamics/blob/master/LICENSE) [![documentation workflow](https://github.com/shareloqs/MPSDynamics/actions/workflows/docs.yml/badge.svg)](https://shareloqs.github.io/MPSDynamics/)
+[![J. Chem. Phys.](https://img.shields.io/badge/J.%20Chem.%20Phys.%20-%2010.1063%2F5.0223107%20-%20navy)](https://doi.org/10.1063/5.0223107) [![ArXiv](https://img.shields.io/badge/arXiv-2406.07052-B31B1B.svg)](https://arxiv.org/abs/2406.07052) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11400776.svg)](https://doi.org/10.5281/zenodo.11400776) [![license](https://img.shields.io/badge/License-GPL_3.0-orange.svg)](https://github.com/shareloqs/MPSDynamics/blob/master/LICENSE) [![documentation workflow](https://github.com/shareloqs/MPSDynamics/actions/workflows/docs.yml/badge.svg)](https://shareloqs.github.io/MPSDynamics.jl/)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 
