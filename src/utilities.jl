@@ -47,7 +47,7 @@ Helper function returning a dictionnary containing the necessary arguments for o
 # Arguments
 
 * `plot_obs` : Observable to plot
-* `save_obs` : Observable(s) to save
+* `save_obs` : List of Observable(s) to save
 * `savedir` : Used to specify the path where temporary files are stored, default is `"auto"` which saves in a "tmp" folder in the run folder (generally located at "~/MPSDynamics/<unid>/tmp/"). 
 * `step` : Number of time steps every which the function plots or saves the data
 * `func` : Function to apply to the result of measurement of plot_obs (for example `real` or `abs` to make a complex result possible to plot)
@@ -63,7 +63,7 @@ runsim(..., onthefly=onthefly(plot_obs=ob1, save_obs=[ob1], savedir="auto", step
 ```
 To merge the temporary files in one usable file, one can then use [`MPSDynamics.mergetmp`](@ref).
 """
-function onthefly(;plot_obs=nothing::Union{<:Observable, Nothing}, save_obs=Vector{Observable}(undef, 0)::Union{<:Observable, Vector{<:Observable}}, savedir="auto", step=10::Int, func=identity<:Function, compare=nothing::Union{Tuple{Vector{Float64}, Vector{Float64}}, Nothing}, clear=nothing)
+function onthefly(;plot_obs=nothing::Union{<:Observable, Nothing}, save_obs=Vector{Observable}(undef, 0)::Union{<:Observable, Vector{<:Observable}}, savedir="auto", step=10::Int, func=identity::Function, compare=nothing::Union{Tuple{Vector{Float64}, Vector{Float64}}, Nothing}, clear=nothing)
     if isnothing(plot_obs) && isempty(save_obs)
         error("Must provide an observable to plot/save")
     end
@@ -71,7 +71,7 @@ function onthefly(;plot_obs=nothing::Union{<:Observable, Nothing}, save_obs=Vect
     plt = isnothing(plot_obs) ? nothing : plot(title="Intermediate Results", xlabel="t", ylabel=plot_obs.name)
     !isnothing(compare) && plot!(compare)
     println("On the fly mode activated")
-    return Dict(:plot_obs => plot_obs.name, :save_obs => [ob.name for ob in save_obs], :savedir => savedir, :step => step, :func => func, :clear => clear, :compare => compare, :plot => plt)
+    return Dict(:plot_obs => isnothing(plot_obs) ? nothing : plot_obs.name, :save_obs => [ob.name for ob in save_obs], :savedir => savedir, :step => step, :func => func, :clear => clear, :compare => compare, :plot => plt)
 end
 
 """
