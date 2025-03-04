@@ -155,6 +155,9 @@ Import["~/MPSDynamics/XXXXX/dat_XXXXX.jld",{"HDF5","Datasets","/data/sz"}]
 
 # Publications
 Publications which make use of MPSDynamics:
+* Le Dé et al. Impact and Interplay of Quantum Coherence and Dissipative Dynamics for Isotope Effects in Excited-State Intramolecular Proton Transfer
+    * [https://doi.org/10.1021/acs.jpclett.4c03665](https://doi.org/10.1021/acs.jpclett.4c03665)
+
 * Lacroix et al. Making Quantum Collision Models Exact, *arXiv e-print*, November 2024
     * [https://doi.org/10.48550/arXiv.2411.13166](https://doi.org/10.48550/arXiv.2411.13166)
 
