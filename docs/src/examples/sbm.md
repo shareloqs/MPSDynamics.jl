@@ -11,6 +11,9 @@ Even though this model is fairly simple it is physically very rich and it is not
 
 For instance when the SD is Ohmic, this model presents a phase transition between a so called localised and a delocalised phase for ``\alpha \approx 1.2``.
 
+> [!WARNING]
+> Different definitions exist for the Spin-Boson Model with different corresponding Hamiltonian. For instance, ``\hat{\sigma}_z`` and ``\hat{\sigma}_x`` are sometimes switched in the Hamiltonians.
+
 Here we break out and comment the script in `MPSDynamics/examples/sbm_zero_temperature.jl` to show how to simulate this model with an Ohmic SD (hard cut-off) using the T-TEDOPA method as implemented in `MPSDynamics.jl`.
 
 The T-TEDOPA method relies on a truncated chain mapping that transform the initial Hamiltonian into
@@ -149,3 +152,7 @@ method == :DTDVP && heatmap(dat["data/times"], collect(0:N+1), dat["data/bonddim
 
 heatmap(dat["data/times"], collect(1:N), abs.(dat["data/SXdisp"][1,:,:]), xlabel=L"t",ylabel="chain mode")
 ```
+
+![image](sbm_sz.png)
+
+![image](sbm_heatmap.png)

@@ -225,12 +225,19 @@ plt=plot!(ɸwp,gaussian,linecolor=:black,linewidth=3,  label="", fillrange = (Ei
 
 display(plt)
 ```
+
+![image](protontransfer_doublewell.png)
+
 The stored observables can be showed as usual.
 ```julia
 ##### Results #####
 
 display(plot(dat["data/times"], dat["data/RC displacement"],label="<X> (arb. units)", linecolor =:black, xlabel="Time (arb. units)",ylabel="<X>", title="", linewidth=4, legend=:none, tickfontsize=10,xlims=(0,2000)))
 ```
+
+![image](protontransfer_X.png)
+
+
 Eventually, the reduced density matrix is analyzed. Initially expressed in the Fock dimension, the eigenvectors of the RC oscillator that are constructed here allows us to translate it into the reaction coordinate space dimension.
 ```julia
 #### Reduced Density Matrix in space#####
@@ -314,6 +321,9 @@ anim = @animate for t=1:length(dat["data/times"])
 end
 display(gif(anim, "gif_reducedrho.gif", fps = 2.5))
 ```
+
+![](gif_population.gif)
+![](gif_reducedrho.gif)
 ________________
 ## Bibliography
 
