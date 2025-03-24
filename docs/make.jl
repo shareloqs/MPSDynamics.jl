@@ -23,7 +23,7 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/shareloqs/MPSDynamics.git",
+    repo = "github.com/shareloqs/MPSDynamics.jl.git",
     devurl = "docs",
     devbranch = "master"
 )
