@@ -164,7 +164,7 @@ ob3 = TwoSiteObservable("SXdisp", sx, disp(d), [1], collect(2:N+1))
 A, dat = runsim(dt, tfinal, A, H;
                 name = "Driving field on ohmic spin boson model",
                 method = method,
-                obs = [ob1],
+                obs = [ob1, ob2, ob3],
                 convobs = [ob1],
                 params = @LogParams(N, d, α, Δ, ω0, s),
                 convparams = D,
@@ -176,7 +176,7 @@ A, dat = runsim(dt, tfinal, A, H;
                 plot = true,
                 );
 ```
-Eventually, the stored observables can be represented. For more information about the chain observables, see [Inspecting the bath by undoing the chain mapping] 
+Eventually, the stored observables can be represented. For more information about the chain observables, see [Inspecting the bath by undoing the chain mapping](@ref) 
 ```julia
 
 #----------

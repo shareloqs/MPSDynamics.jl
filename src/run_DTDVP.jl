@@ -1,4 +1,4 @@
-function run_DTDVP(dt, tmax, A, H, prec; obs=[], effects=false, error=false, timed=false, savebonddims=false, Dplusmax=nothing, Dlim=50, reduceddensity=false, timedep=false, kwargs...)
+function run_DTDVP(dt, tmax, A, H, prec; obs=[], effects=false, error=false, timed=false, savebonddims=false, Dplusmax=nothing, Dlim=50, reduceddensity=false, timedep=false, progressbar=true, onthefly=Dict(), kwargs...)
     A0=deepcopy(A)
     H0=deepcopy(H)
     data = Dict{String,Any}()
@@ -25,12 +25,19 @@ function run_DTDVP(dt, tmax, A, H, prec; obs=[], effects=false, error=false, tim
     timed && (ttdvp = Vector{Float64}(undef, numsteps))
     timed && (tproj = Vector{Float64}(undef, numsteps))
     effects && (efft = Vector{Any}(undef, numsteps))
+    onthefly = copy(onthefly)
+    ontheflyplotbool = !isempty(onthefly) && !isnothing(onthefly[:plot_obs])
+    ontheflysavebool =  !isempty(onthefly) && !isempty(onthefly[:save_obs])
+    ontheflysavebool && (onthefly[:save_obs] = intersect(onthefly[:save_obs], [ob.name for ob in obs]))
 
     F=nothing
     Afull=nothing
-    for tstep=1:numsteps
-        maxbond = max(bonds...)
-        @printf("%i/%i, t = %.3f, Dmax = %i \n", tstep, numsteps, times[tstep], maxbond)
+    iter = progressbar ? ProgressBar(numsteps; ETA=false) : 1:numsteps
+    for tstep in iter
+        if !progressbar
+            maxbond = max(bonds...)
+            @printf("%i/%i, t = %.3f, Dmax = %i \n", tstep, numsteps, times[tstep], maxbond)
+        end
         if timedep
            Ndrive = kwargs[:Ndrive]
            Htime = kwargs[:Htime]
@@ -58,6 +65,9 @@ function run_DTDVP(dt, tmax, A, H, prec; obs=[], effects=false, error=false, tim
         
         exp = info["obs"]
         bonds = info["dims"]
+        progressbar && (maxbond = max(bonds...))
+        progressbar && (iter.Dmax = maxbond)
+
         effects && (efft[tstep] = reduce(hcat, info["effect"]))
         error && (errs[tstep] = info["err"])
         timed && (ttdvp[tstep] = info["t2"] + info["t3"])
@@ -71,6 +81,8 @@ function run_DTDVP(dt, tmax, A, H, prec; obs=[], effects=false, error=false, tim
                 exprho = rhoreduced_1site(A0,Nrho)
             	data["Reduced ρ"] = cat(data["Reduced ρ"], exprho; dims=ndims(exprho)+1)
             end
+            ontheflyplotbool && (tstep-1)%onthefly[:step] == 0 && ontheflyplot(onthefly, tstep-1, times, data)
+            ontheflysavebool && (tstep-1)%onthefly[:step] == 0 && ontheflysave(onthefly, tstep-1, times, data)
         end
         if savebonddims
             data["bonddims"] = cat(data["bonddims"], bonds, dims=2)

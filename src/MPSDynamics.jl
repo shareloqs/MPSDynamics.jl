@@ -28,6 +28,7 @@ include("run_DTDVP.jl")
 include("chainA1TDVP.jl")
 include("switchmpo.jl")
 include("finitetemperature.jl")
+include("utilities.jl")
 
 """
     runsim(dt, tmax, A, H; 
@@ -87,12 +88,16 @@ function runsim(dt, tmax, A, H;
         convparams = typeof(convparams) <: Vector ? only(convparams) : convparams
     end
 
-    if save || plot
+    if save || plot || (:onthefly in keys(kwargs) && !isempty(kwargs[:onthefly][:save_obs]) && kwargs[:onthefly][:savedir] == "auto")
         if savedir[end] != '/'
             savedir = string(savedir,"/")
         end
         isdir(savedir) || mkdir(savedir)
         open_log(dt, tmax, convparams, method, machine, savedir, unid, name, params, obs, convobs, convcheck, kwargs...)
+        if :onthefly in keys(kwargs)
+            mkdir(string(savedir, unid, "/tmp/"))
+            kwargs[:onthefly][:savedir] = string(savedir, unid, "/tmp/")
+        end
     end
 
     paramdict = Dict([[(par[1], par[2]) for par in params]...,
@@ -155,7 +160,7 @@ export chaincoeffs_ohmic, spinbosonmpo, methylbluempo, methylbluempo_correlated,
 
 export productstatemps, physdims, randmps, bonddims, elementmps
 
-export measure, measurempo, OneSiteObservable, TwoSiteObservable, FockError, errorbar
+export measure, measurempo, OneSiteObservable, TwoSiteObservable, RhoReduced, FockError, errorbar
 
 export runsim, run_all
 
@@ -173,7 +178,9 @@ export MPOtoVector
 
 export rhoreduced_2sites, rhoreduced_1site, protontransfermpo
 
-export chaincoeffs_finiteT, chaincoeffs_fermionic, fermionicspectraldensity_finiteT
+export chaincoeffs_finiteT, chaincoeffs_fermionic, fermionicspectraldensity_finiteT, chaincoeffs_finiteT_discrete
+
+export onthefly, mergetmp
 
 end
 

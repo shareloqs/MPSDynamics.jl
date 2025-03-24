@@ -114,7 +114,7 @@ This initial state is a product state between the system and the chain. It is co
 # MPO and initial state MPS
 #---------------------------
 
-H = puredephasingmpo(ΔE, d, N, cpars)
+H = puredephasingmpo(ω0, d, N, cpars)
 
 # Initial electronic system in a superposition of 1 and 2
 ψ = zeros(2)
@@ -142,7 +142,7 @@ A, dat = runsim(dt, tfinal, A, H, prec=1E-4;
                 method = method,
                 obs = [ob1],
                 convobs = [ob1],
-                params = @LogParams(ΔE, N, d, α, s),
+                params = @LogParams(ω0, N, d, α, s),
                 convparams = D,
                 reduceddensity=true,
                 verbose = false,

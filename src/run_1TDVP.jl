@@ -1,4 +1,4 @@
-function run_1TDVP(dt, tmax, A, H, Dmax; obs=[], timed=false, reduceddensity=false, timedep=false, kwargs...)
+function run_1TDVP(dt, tmax, A, H, Dmax; obs=[], timed=false, reduceddensity=false, timedep=false, progressbar=true, onthefly=Dict(), kwargs...)
     A0=deepcopy(A)
     H0=deepcopy(H)
     data = Dict{String,Any}()
@@ -19,12 +19,19 @@ function run_1TDVP(dt, tmax, A, H, Dmax; obs=[], timed=false, reduceddensity=fal
     end
 
     timed && (ttdvp = Vector{Float64}(undef, numsteps))
+    onthefly = copy(onthefly)
+    ontheflyplotbool = !isempty(onthefly) && !isnothing(onthefly[:plot_obs])
+    ontheflysavebool =  !isempty(onthefly) && !isempty(onthefly[:save_obs])
+    ontheflysavebool && (onthefly[:save_obs] = intersect(onthefly[:save_obs], [ob.name for ob in obs]))
 
     F=nothing
     mpsembed!(A0, Dmax)
-    for tstep=1:numsteps
-        @printf("%i/%i, t = %.3f ", tstep, numsteps, times[tstep])
-        println()
+    iter = progressbar ? ProgressBar(numsteps; ETA=true) : 1:numsteps
+    for tstep in iter
+        if !progressbar
+            @printf("%i/%i, t = %.3f ", tstep, numsteps, times[tstep])
+            println()
+        end
         if timedep
 	   Ndrive = kwargs[:Ndrive]
 	   Htime = kwargs[:Htime]
@@ -55,6 +62,8 @@ function run_1TDVP(dt, tmax, A, H, Dmax; obs=[], timed=false, reduceddensity=fal
             exprho = rhoreduced_1site(A0,Nrho)
             data["Reduced ρ"] = cat(data["Reduced ρ"], exprho; dims=ndims(exprho)+1)
         end
+        ontheflyplotbool && tstep%onthefly[:step] == 0 && ontheflyplot(onthefly, tstep, times, data)
+        ontheflysavebool && tstep%onthefly[:step] == 0 && ontheflysave(onthefly, tstep, times, data)
     end
     timed && push!(data, "deltat"=>ttdvp)
     push!(data, "times" => times)

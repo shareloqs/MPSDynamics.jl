@@ -5,7 +5,7 @@
 
 
 
-[![J. Chem. Phys.](https://img.shields.io/badge/J.%20Chem.%20Phys.%20-%2010.1063%2F5.0223107%20-%20navy)](https://doi.org/10.1063/5.0223107) [![ArXiv](https://img.shields.io/badge/arXiv-2406.07052-B31B1B.svg)](https://arxiv.org/abs/2406.07052) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11400776.svg)](https://doi.org/10.5281/zenodo.11400776) [![license](https://img.shields.io/badge/License-GPL_3.0-orange.svg)](https://github.com/shareloqs/MPSDynamics/blob/master/LICENSE) [![documentation workflow](https://github.com/shareloqs/MPSDynamics/actions/workflows/docs.yml/badge.svg)](https://shareloqs.github.io/MPSDynamics/)
+[![J. Chem. Phys.](https://img.shields.io/badge/J.%20Chem.%20Phys.%20-%2010.1063%2F5.0223107%20-%20navy)](https://doi.org/10.1063/5.0223107) [![ArXiv](https://img.shields.io/badge/arXiv-2406.07052-B31B1B.svg)](https://arxiv.org/abs/2406.07052) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11400776.svg)](https://doi.org/10.5281/zenodo.11400776) [![license](https://img.shields.io/badge/License-GPL_3.0-orange.svg)](https://github.com/shareloqs/MPSDynamics/blob/master/LICENSE) [![documentation workflow](https://github.com/shareloqs/MPSDynamics/actions/workflows/docs.yml/badge.svg)](https://shareloqs.github.io/MPSDynamics.jl/)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 
@@ -26,10 +26,10 @@ The elementary tensor operations are implemented in all cases using the [TensorO
 
 # Installation
 
-The package may be installed by typing the following into a Julia REPL
+The package may be installed by typing `]` in a Julia REPL to enter the package manager, and then run the command
 
 ```julia
-] add https://github.com/shareloqs/MPSDynamics.git
+pkg> add MPSDynamics
 ```
 
 # Usage
@@ -151,10 +151,13 @@ Import["~/MPSDynamics/XXXXX/dat_XXXXX.jld",{"HDF5","Datasets","/data/sz"}]
 ```
 
 # Documentation
-  [https://shareloqs.github.io/MPSDynamics/](https://shareloqs.github.io/MPSDynamics/)
+  [https://shareloqs.github.io/MPSDynamics.jl/](https://shareloqs.github.io/MPSDynamics.jl/)
 
 # Publications
 Publications which make use of MPSDynamics:
+* Le Dé et al. Impact and Interplay of Quantum Coherence and Dissipative Dynamics for Isotope Effects in Excited-State Intramolecular Proton Transfer, *J. Phys. Chem. Lett.*, February 2025
+    * [https://doi.org/10.1021/acs.jpclett.4c03665](https://doi.org/10.1021/acs.jpclett.4c03665)
+
 * Lacroix et al. Making Quantum Collision Models Exact, *arXiv e-print*, November 2024
     * [https://doi.org/10.48550/arXiv.2411.13166](https://doi.org/10.48550/arXiv.2411.13166)
 
