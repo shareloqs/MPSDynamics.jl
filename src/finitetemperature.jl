@@ -27,8 +27,9 @@ Users can provide their own spectral density.
 * AB: component intervals. The defaut intervals are [[-Inf -ωc];[-ωc 0];[0 ωc];[ωc Inf]].
 * Mmax: maximum number of integration points
 * save: if true the coefficients are saved
+* smooth: if true the spectral density is multiplied by a decreasing exponential instead of a Heaviside function.
 """
-function chaincoeffs_finiteT(nummodes, β, ohmic=true; α=1, s=1, J=nothing, ωc=1, mc=4, mp=0, AB=nothing, iq=1, idelta=2, procedure=:Lanczos, Mmax=5000, save=true)
+function chaincoeffs_finiteT(nummodes, β, ohmic=true; α=1, s=1, J=nothing, ωc=1, mc=4, mp=0, AB=nothing, iq=1, idelta=2, procedure=:Lanczos, Mmax=5000, save=true, smooth=false)
 
     N = nummodes #Number of bath modes
 
@@ -45,7 +46,7 @@ function chaincoeffs_finiteT(nummodes, β, ohmic=true; α=1, s=1, J=nothing, ωc
     
     # Express the spectral density according to the intervals
     if ohmic==true
-        wf(x,i) = ohmicspectraldensity_finiteT(x,i,α,s,ωc,β)
+        wf(x,i) = ohmicspectraldensity_finiteT(x,i,α,s,ωc,β; smooth=smooth)
     elseif J==nothing
         throw(ArgumentError("A spectral density should have been provided."))
     else

@@ -74,13 +74,13 @@ function ohmicspectraldensity_finiteT(x,i,α,s,ωc,β; smooth=false)
         y = 0
     elseif i==2
 	if smooth
-	  y = -2 .*( α*abs.(x).^s ./ ωc^(s-1)) .* (coth.((β/2).*x) .+ 1)./2 .* exp(-abs(x)/wc)
+	  y = -2 .*( α*abs.(x).^s ./ ωc^(s-1)) .* (coth.((β/2).*x) .+ 1)./2 .* exp.(-abs.(x) ./ ωc)
 	else
           y = -2 .*( α*abs.(x).^s ./ ωc^(s-1)) .* (coth.((β/2).*x) .+ 1)./2 
 	end
     elseif i==3
         if smooth
-          y = 2 .*( α*abs.(x).^s ./ ωc^(s-1)) .* (coth.((β/2).*x) .+ 1)./2 .* exp(-abs(x)/wc)
+          y = 2 .*( α*abs.(x).^s ./ ωc^(s-1)) .* (coth.((β/2).*x) .+ 1)./2 .* exp.(-abs.(x) ./ ωc)
         else
           y = 2 .*( α*abs.(x).^s ./ ωc^(s-1)) .* (coth.((β/2).*x) .+ 1)./2 
         end

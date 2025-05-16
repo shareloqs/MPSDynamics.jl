@@ -105,7 +105,7 @@ if Jω_type==:Discrete
 
 elseif Jω_type==:Continuous
 
-    cpars = chaincoeffs_finiteT(N, β, false; α=α, s=s, J=Jω_fct, ωc=ωc, mc=size(AB)[1], mp=0, AB=AB, iq=1, idelta=2, procedure=:Lanczos, Mmax=5000, save=false)  # chain parameters, i.e. on-site energies ϵ_i, hopping energies t_i, and system-chain coupling c_0
+    cpars = chaincoeffs_finiteT(N, β, false; α=α, s=s, J=Jω_fct, ωc=ωc, mc=size(AB)[1], mp=0, AB=AB, iq=1, idelta=2, procedure=:Lanczos, Mmax=5000, save=false, smooth=false)  # chain parameters, i.e. on-site energies ϵ_i, hopping energies t_i, and system-chain coupling c_0
 
 end
 
