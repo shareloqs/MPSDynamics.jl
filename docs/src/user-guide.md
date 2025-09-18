@@ -82,6 +82,7 @@ The corresponding chain coefficients for an Ohmic or a user provided spectral de
 This method is based on the `ORTHOPOL` routines[^Gautschi].
 
 !!! warning
+
 	We became aware that for finite-temperature sub-Ohmic spectral densities the computed chain coefficients are erroneous. We are working to fix this issue.
 
 ## Observables
