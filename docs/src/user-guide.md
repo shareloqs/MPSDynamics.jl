@@ -79,7 +79,10 @@ MPOs are fundamentally a lists of rank-4 tensors such that the right bond dimens
 In the T-TEDOPA framework (see [Theoretical Background](@ref) for more details) finite temperature simulations are done with an effective pure state description of the system and the environment where the coupling coefficients (or the SD) is temperature-dependent.
 
 The corresponding chain coefficients for an Ohmic or a user provided spectral density (that can thus in pratice be either at zero or finite temperature) are computed with the [`chaincoeffs_finiteT`](@ref).
-This method is based on the `ORTHOPOL` routines[^Gautschi]
+This method is based on the `ORTHOPOL` routines[^Gautschi].
+
+!!! warning
+	We became aware that for finite-temperature sub-Ohmic spectral densities the computed chain coefficients are erroneous. We are working to fix this issue.
 
 ## Observables
 
