@@ -155,6 +155,9 @@ Import["~/MPSDynamics/XXXXX/dat_XXXXX.jld",{"HDF5","Datasets","/data/sz"}]
 
 # Publications
 Publications which make use of MPSDynamics:
+* Lorenzoni et al. Full microscopic simulations uncover persistent quantum effects in primary photosynthesis, *Sci. Adv.* 11, eady6751, October 2025
+    * [https://doi.org/10.1126/sciadv.ady6751](https://doi.org/10.1126/sciadv.ady6751)
+
 * Lacroix et al. Making quantum collision models exact, *Commun. Phys.* 8, 268, July 2025
     * [https://doi.org/10.1038/s42005-025-02201-2](https://doi.org/10.1038/s42005-025-02201-2)
 
