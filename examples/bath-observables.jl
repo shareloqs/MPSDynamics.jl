@@ -1,6 +1,6 @@
 using MPSDynamics, Plots, LaTeXStrings, QuadGK, LinearAlgebra, Interpolations, Revise
 
-import MPSDynamics: measuremodes, measurecorrs, mpsembed!, eigenchain, physical_occup, bath_occup_phys
+import MPSDynamics: measuremodes, measurecorrs, mpsembed!, eigenchain, physical_occup
 
 
 const ∞  = Inf
