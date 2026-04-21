@@ -232,6 +232,8 @@ Generate chain coefficients ``[[ϵ_0,ϵ_1,...],[t_0,t_1,...],c_0]`` for a discre
 * procedure: choice between the Stieltjes and the Lanczos procedure
 * Mmax: maximum number of integration points
 * save: if true the coefficients are saved
+
+Warning : works only for equal spacing between frequencies.
 """
 function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:Lanczos, Mmax=5000, save=true)
 
@@ -249,7 +251,7 @@ function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:La
        Jω =  vcat(Jω_neg,Jω_pos)
     end
 
-    N=length(ω) #Number of bath modes
+    N=length(ωdiscrete) #Number of bath modes
     mp=length(ω) # the number of points in the discrete part of the measure
 
     DM =Array{Float64}(undef,mp,2)
@@ -257,8 +259,6 @@ function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:La
        DM[i,1] = ω[i]
        DM[i,2] = Jω[i]
     end
-
-    eps0=1e7*eps(Float64)
 
     jacerg = zeros(N,2)
 
@@ -279,7 +279,7 @@ function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:La
     end
     jacerg[N,1] = ab[N,1]
 
-    eta = sum(Jω)
+    eta = sum((ωdiscrete[2]-ωdiscrete[1]) .* Jω) # Could be a source of numerical error, works for frequency equal spacing
 
     jacerg[N,2] = sqrt(eta) #coupling coeficient
 
