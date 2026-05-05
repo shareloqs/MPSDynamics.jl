@@ -229,13 +229,14 @@ Generate chain coefficients ``[[ϵ_0,ϵ_1,...],[t_0,t_1,...],c_0]`` for a discre
 * β: inverse temperature. For 0 Kelvin, put Inf as β
 * ωdiscrete: discrete frequency corresponding to the Jωdiscrete values
 * Jωdiscrete: amplitude of the spectral density at the corresponding ωdiscrete
+* N: number of chain sites for which coefficients are calculated. Default keeps the same number of modes as the input. When T !=0K, the exact mapping is for N=2*length(ωdiscrete)
 * procedure: choice between the Stieltjes and the Lanczos procedure
 * Mmax: maximum number of integration points
 * save: if true the coefficients are saved
 
 Warning : works only for equal spacing between frequencies.
 """
-function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:Lanczos, Mmax=5000, save=true)
+function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete;N=length(ωdiscrete), procedure=:Lanczos, Mmax=5000, save=true)
 
     ω = ωdiscrete
     Jω = Jωdiscrete
@@ -247,11 +248,14 @@ function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:La
        ω_neg = -ω
        Jω_neg = -Jω .* (coth.((β/2).*ω_neg[:]) .+ 1) ./2
 
-       ω = vcat(ω_neg,ω_pos)
-       Jω =  vcat(Jω_neg,Jω_pos)
+       if ω_pos[1]==0.0 #discard freq=zero because leads to Nan
+            Jω_neg[1] = Jω_pos[1]= 0.0
+       end
+
+       ω = vcat(reverse(ω_neg),ω_pos)
+       Jω =  vcat(reverse(Jω_neg),Jω_pos)
     end
 
-    N=length(ωdiscrete) #Number of bath modes
     mp=length(ω) # the number of points in the discrete part of the measure
 
     DM =Array{Float64}(undef,mp,2)
@@ -279,7 +283,7 @@ function chaincoeffs_finiteT_discrete(β, ωdiscrete, Jωdiscrete; procedure=:La
     end
     jacerg[N,1] = ab[N,1]
 
-    eta = sum((ωdiscrete[2]-ωdiscrete[1]) .* Jω) # Could be a source of numerical error, works for frequency equal spacing
+    eta = sum((ωdiscrete[2]-ωdiscrete[1]) .* Jω) # quadrature, could be a source of numerical error, works for frequency equal spacing
 
     jacerg[N,2] = sqrt(eta) #coupling coeficient
 

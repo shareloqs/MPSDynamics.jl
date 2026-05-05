@@ -95,7 +95,7 @@ end
 
 if Jω_type==:Discrete
 
-    cpars = chaincoeffs_finiteT_discrete(β, freqs, Jω; procedure=:Lanczos, Mmax=5000, save=false)  # chain parameters, i.e. on-site energies ϵ_i, hopping energies t_i, and system-chain coupling c_0
+    cpars = chaincoeffs_finiteT_discrete(β, freqs, Jω;N=N, procedure=:Lanczos, Mmax=5000, save=false)  # chain parameters, i.e. on-site energies ϵ_i, hopping energies t_i, and system-chain coupling c_0
 
 #= If cpars is stored in "../ChainOhmT/discreteT" 
     curdir = @__DIR__
