@@ -495,6 +495,7 @@ function transpose(A::AbstractArray, dim1::Int, dim2::Int)
     perm[dim2]=dim1
     permutedims(A, perm)
 end
+function QR end # To avoid confusion with new LinearAlgebra QR
 function QR(A::AbstractArray, i::Int)
     dims = [size(A)...]
     nd = length(dims)
@@ -540,6 +541,7 @@ function QR_full(A::AbstractArray; SVD=false)
     end    
 end
 
+function LQ end # To avoid confusion with new LinearAlgebra LQ
 function LQ(A::AbstractArray; SVD=false)
     Dl, Dr, d = size(A)
     if !SVD
